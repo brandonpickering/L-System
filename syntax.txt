@@ -1,0 +1,23 @@
+
+Basic L-System:
+
+rule := sym "->" sym* ";"
+
+
+
+Parameterized L-System:
+
+rule := form "->" expr ";"
+
+form := sym | sym "(" var,* ")"
+
+expr := symexpr*
+symexpr := sym | sym "(" numexpr,* ")"
+numexpr := (var | numlit | arithop)+
+
+
+cmd := "#" define-cmd ";"
+define-cmd := "define" var numlit
+
+
+file := cmd* rule* expr
