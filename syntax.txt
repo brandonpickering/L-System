@@ -1,25 +1,18 @@
 
-Basic L-System:
-
-rule := sym "->" sym*
-
-
-
 Parameterized L-System:
-    TODO: Conditional & probabilistic rules
 
-rule := form "->" expr
 
-form := sym | sym "(" var,* ")"
+line := cmd | rule
 
-expr := symexpr*
-symexpr := sym | sym "(" numexpr,* ")"
+
+cmd := "#var" var numlit
+
+
+rule := form ruleopt* "->" sym*
+
+ruleopts := ("where" | "prob") "(" numexpr ")"
+
+form := symname | symname "(" var,* ")"
+sym := symname | symname "(" numexpr,* ")"
+
 numexpr := (var | numlit | arithop)+
-
-
-cmd := define-cmd | seed-cmd
-define-cmd := "#define" var numlit
-seed-cmd := "#seed" expr
-
-
-file := (cmd | rule)*

@@ -7,6 +7,9 @@
 #include <vector>
 
 
+// TODO: Conditionals, probabilities, environment callbacks?
+
+
 namespace lsystem {
 
 
@@ -18,68 +21,48 @@ struct ParseError {
 
 
 
-typedef std::string Symbol;
+struct Symbol {
+    std::string name;
+    std::vector<double> args;
+};
+
 typedef std::vector<Symbol> String;
 
-struct Rule {
-    Symbol form;
-    String product;
+
+struct Form {
+    std::string name;
+    std::vector<std::string> params;
 };
+
+typedef std::map<std::string, double> Env;
+
+struct EnvSymbol {
+    std::string name;
+    std::vector<std::function<double(Env)>> args;
+
+    Symbol evaluate(Env env) const;
+};
+
+typedef std::vector<EnvSymbol> EnvString;
+
+struct Rule {
+    Form form;
+    EnvString product;
+
+    String evaluate(std::vector<double> args) const;
+};
+
 
 class System {
 public:
-    std::map<Symbol, Rule> rules;
-
     void addRule(Rule rule);
     std::vector<ParseError> interpret(std::vector<std::string> lines);
 
     String seed(std::string name = "seed") const;
     String iterate(String str, unsigned int iterations=1) const;
-};
 
-
-
-struct PSymbol {
-    std::string name;
-    std::vector<double> args;
-};
-
-typedef std::vector<PSymbol> PString;
-
-
-struct PForm {
-    std::string name;
-    std::vector<std::string> params;
-};
-
-typedef std::map<std::string, double> PEnv;
-
-struct PEnvSymbol {
-    std::string name;
-    std::vector<std::function<double(PEnv)>> args;
-
-    PSymbol evaluate(PEnv env) const;
-};
-
-typedef std::vector<PEnvSymbol> PEnvString;
-
-struct PRule {
-    PForm form;
-    PEnvString product;
-
-    PString evaluate(std::vector<double> args) const;
-};
-
-
-class PSystem {
-public:
-    std::map<std::string, PRule> rules;
-
-    void addRule(PRule rule);
-    std::vector<ParseError> interpret(std::vector<std::string> lines);
-
-    PString seed(std::string name = "seed") const;
-    PString iterate(PString str, unsigned int iterations=1) const;
+private:
+    std::map<std::string, Rule> rules;
 };
 
 

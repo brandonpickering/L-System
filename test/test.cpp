@@ -5,11 +5,10 @@
 
 
 using namespace std;
-using namespace lsystem;
 
 
-static void print(PString str) {
-    for (PSymbol sym : str) {
+static void print(lsystem::String str) {
+    for (lsystem::Symbol sym : str) {
         printf("%s", sym.name.c_str());
         if (sym.args.size() > 0) {
             printf("(");
@@ -27,14 +26,14 @@ static void print(PString str) {
 
 
 int main() {
-    PSystem system;
+    lsystem::System system;
     system.interpret({
         " #var k 1 ",
         " seed -> Fib(0, 1) ",
         "Fib(n, m) -> Fib(m, n m k * +)",
     });
 
-    PString str = system.seed();
+    lsystem::String str = system.seed();
     print(str);
     for (int i = 0; i < 10; i++) {
         str = system.iterate(str);
