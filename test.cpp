@@ -7,7 +7,7 @@
 using namespace std;
 
 
-void print(String str) {
+static void print(String str) {
     for (Symbol sym : str)
         printf("%s ", sym.c_str());
     printf("\n");
@@ -16,14 +16,19 @@ void print(String str) {
 
 int main() {
     System system;
-    system.rules["A"] = {"A", "B"};
-    system.rules["B"] = {"C", "B"};
-    system.rules["C"] = {};
+    vector<ParseError> errors = system.interpret({ "#seed O", "I -> I I", "O -> I[O]O" });
 
-    String start = {"A"};
-    for (int i = 0; i < 10; i++) {
-        print(start);
-        start = system.iterate(start);
+    if (errors.size() > 0) {
+        for (ParseError error : errors)
+            printf("%d:%d: %s\n", error.line, error.column, error.message.c_str());
+    
+    } else {
+        String str = system.seed;
+        print(str);
+        for (int i = 0; i < 3; i++) {
+            str = system.iterate(str);
+            print(str);
+        }
     }
 
     return 0;
