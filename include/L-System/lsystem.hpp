@@ -7,7 +7,7 @@
 #include <vector>
 
 
-namespace l_system {
+namespace lsystem {
 
 
 struct ParseError {
@@ -29,11 +29,11 @@ struct Rule {
 class System {
 public:
     std::map<Symbol, Rule> rules;
-    String seed;
 
     void addRule(Rule rule);
     std::vector<ParseError> interpret(std::vector<std::string> lines);
 
+    String seed(std::string name = "seed") const;
     String iterate(String str, unsigned int iterations=1) const;
 };
 
@@ -74,11 +74,11 @@ struct PRule {
 class PSystem {
 public:
     std::map<std::string, PRule> rules;
-    PString seed;
 
     void addRule(PRule rule);
     std::vector<ParseError> interpret(std::vector<std::string> lines);
 
+    PString seed(std::string name = "seed") const;
     PString iterate(PString str, unsigned int iterations=1) const;
 };
 

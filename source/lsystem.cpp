@@ -1,15 +1,19 @@
 
-#include <L-System/l_system.hpp>
+#include <L-System/lsystem.hpp>
 
 
 using namespace std;
 
 
-namespace l_system {
+namespace lsystem {
 
 
 void System::addRule(Rule rule) {
     rules[rule.form] = rule;
+}
+
+String System::seed(std::string name) const {
+    return iterate({name}, 1);
 }
 
 String System::iterate(String str, unsigned int iterations) const {
@@ -55,6 +59,10 @@ PString PRule::evaluate(vector<double> args) const {
 
 void PSystem::addRule(PRule rule) {
     rules[rule.form.name] = rule;
+}
+
+PString PSystem::seed(std::string name) const {
+    return iterate({{name, {}}}, 1);
 }
 
 PString PSystem::iterate(PString str, unsigned int iterations) const {

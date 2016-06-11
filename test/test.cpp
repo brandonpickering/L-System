@@ -1,40 +1,45 @@
 
-#include <L-System/l_system.hpp>
+#include <L-System/lsystem.hpp>
 
 #include <cstdio>
 
 
 using namespace std;
-using namespace l_system;
+using namespace lsystem;
 
 
 static void print(PString str) {
     for (PSymbol sym : str) {
-        printf("%s(", sym.name.c_str());
-        for (unsigned int i = 0; i < sym.args.size(); i++) {
-            printf("%.1f", sym.args[i]);
-            if (i < sym.args.size() - 1) printf(", ");
+        printf("%s", sym.name.c_str());
+        if (sym.args.size() > 0) {
+            printf("(");
+            for (unsigned int i = 0; i < sym.args.size(); i++) {
+                printf("%f", sym.args[i]);
+                if (i < sym.args.size() - 1)
+                    printf(", ");
+            }
+            printf(")");
         }
-        printf(") ");
+        printf(" ");
     }
     printf("\n");
 }
 
 
 int main() {
-    PString str = { {"A", {3, 2}}, {"B", {4}} };
-    print(str);
-
-    PRule rule = {
-        { "A", {"t", "s"} },
-        {
-            { "B", { [](PEnv env) { return env["t"] + env["s"]; } } },
-            { "A", { [](PEnv env) { return env["t"] + env["s"]; }, [](PEnv env) { return env["s"]; } } }
-        },
-    };
     PSystem system;
-    system.addRule(rule);
-    print(system.iterate(str));
+    system.interpret({
+        " #var k 1 ",
+        " seed -> Fib(0, 1) ",
+        "Fib(n, m) -> Fib(m, n m k * +)",
+    });
+
+    PString str = system.seed();
+    print(str);
+    for (int i = 0; i < 10; i++) {
+        str = system.iterate(str);
+        print(str);
+    }
 
     return 0;
 }

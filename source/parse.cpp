@@ -1,5 +1,5 @@
 
-#include <L-System/l_system.hpp>
+#include <L-System/lsystem.hpp>
 
 #include <cctype>
 
@@ -7,7 +7,7 @@
 using namespace std;
 
 
-namespace l_system {
+namespace lsystem {
 
 
 static void eatWhitespace(string input, unsigned int &index) {
@@ -24,7 +24,7 @@ static void matchString(string pattern, string input, unsigned int &index, vecto
 
 
 static bool isSymbol(char c) {
-    return !isspace(c) && !isdigit(c);
+    return !isspace(c) && !isdigit(c) && c != '#';
 }
 
 static Symbol parseSymbol(string input, unsigned int &index, vector<ParseError> &errors) {
@@ -84,12 +84,7 @@ static vector<ParseError> interpretLine(string input, System &system) {
         string command = input.substr(index, ws - index);
         index = ws; eatWhitespace(input, index);
 
-        if (command == "seed") {
-            system.seed = parseString(input, index, errors);
-        
-        } else {
-            errors.push_back({0, index0, "unknown command '" + command + "'"});
-        }
+        errors.push_back({0, index0, "unknown command '" + command + "'"});
 
     } else {
         system.addRule(parseRule(input, index, errors));

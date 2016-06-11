@@ -1,4 +1,6 @@
 
+LIB=lib/liblsystem.a
+
 SOURCES=$(wildcard source/*.cpp)
 HEADERS=$(wildcard include/L-System/*)
 
@@ -11,25 +13,24 @@ OBJECTS=$(SOURCES:source/%.cpp=build/%.o)
 LDFLAGS=-static-libgcc -static-libstdc++
 
 
-all: build
+all: lib
 
 clean:
 	rm -rf $(OBJECTS)
 	rm -rf lib/*.a
 	rm -rf test/*.exe
 
-build: lib test/test.exe
+build: lib
 
-lib: lib/libl_system.a
+lib: $(LIB)
 
-lib/libl_system.a: $(OBJECTS)
-	ar rvs lib/libl_system.a $^
+test: test/test.exe
+
+$(LIB): $(OBJECTS)
+	ar rvs $@ $^
 
 build/%.o: source/%.cpp $(HEADERS)
 	$(CC) -c $(CFLAGS) $< -o $@
 
-test/test.exe: test/test.cpp lib $(HEADERS)
-	$(CC) $(CFLAGS) $< $(LDFLAGS) -L./lib -ll_system -o test/test.exe
-
-test: test/test.exe
-	test/test.exe
+test/test.exe: test/test.cpp $(LIB) $(HEADERS)
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -L$(dir $(LIB)) -llsystem -o test/test.exe
