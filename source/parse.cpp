@@ -1,10 +1,13 @@
 
-#include "lsystem.hpp"
+#include <L-System/l_system.hpp>
 
 #include <cctype>
 
 
 using namespace std;
+
+
+namespace l_system {
 
 
 static void eatWhitespace(string input, unsigned int &index) {
@@ -160,4 +163,7 @@ vector<ParseError> System::interpret(vector<string> lines) {
     if (errors.size() == 0)
         *this = system;
     return errors;
+}
+
+
 }
