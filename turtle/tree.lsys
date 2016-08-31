@@ -1,0 +1,13 @@
+
+#var r1 0.9
+#var r2 0.6
+#var a0 45
+#var a2 45
+#var d 137.5
+
+
+seed -> A(1)
+
+A(l) -> seg(l) [ pitch(a0 neg) B(l r2 *) ] roll(d neg) A(l r1 *)
+B(l) -> seg(l) [ yaw(a2 neg) bal C(l r2 *) ] C(l r1 *)
+C(l) -> seg(l) [ yaw(a2) bal B(l r2 *) ] B(l r1 *)
